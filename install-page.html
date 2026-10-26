@@ -1,0 +1,193 @@
+<title>Get DJ on Your Mac</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@600;800&family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@500&display=swap">
+<style>
+  /* Layout: one narrow column like a gig flyer; steps run down a "tracklist" with BPM-style step numbers */
+  :root {
+    --bg: #FBF7F4;
+    --surface: #FFFFFF;
+    --fg: #1D1720;
+    --muted: #6E6470;
+    --line: #E8DFE2;
+    --accent: #D62F6B;
+    --accent-ink: #FFFFFF;
+    --accent-soft: #FBE3EC;
+    --mac-blue: #0A66D8;
+    --display: "Unbounded", "Arial Black", system-ui, sans-serif;
+    --body: "Instrument Sans", -apple-system, "Helvetica Neue", system-ui, sans-serif;
+    --mono: "JetBrains Mono", ui-monospace, Menlo, monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #151217; --surface: #1F1A22; --fg: #F3ECF0; --muted: #A99DA8; --line: #342C37;
+      --accent: #FF5C93; --accent-ink: #1A0910; --accent-soft: #3A1A28; --mac-blue: #4C9BFF;
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #151217; --surface: #1F1A22; --fg: #F3ECF0; --muted: #A99DA8; --line: #342C37;
+    --accent: #FF5C93; --accent-ink: #1A0910; --accent-soft: #3A1A28; --mac-blue: #4C9BFF;
+    color-scheme: dark;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--fg);
+    font: 400 17px/1.6 var(--body);
+    padding-left: max(16px, env(safe-area-inset-left, 0px));
+    padding-right: max(16px, env(safe-area-inset-right, 0px));
+  }
+  .page { max-width: 640px; margin: 0 auto; padding-block: 48px 72px; display: grid; gap: 48px; }
+
+  header { display: grid; gap: 16px; }
+  .app { display: flex; align-items: center; gap: 14px; }
+  .icon {
+    width: 56px; height: 56px; border-radius: 14px; flex: none;
+    background: linear-gradient(150deg, #F94088, #7A35F0);
+    display: grid; place-items: center; color: #fff; font-size: 30px; line-height: 1;
+  }
+  .eyebrow { font: 600 12px/1 var(--body); letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+  h1 { font: 800 clamp(30px, 7vw, 44px)/1.05 var(--display); margin: 0; letter-spacing: -.01em; text-wrap: balance; }
+  .lede { margin: 0; font-size: 19px; color: var(--muted); max-width: 52ch; }
+  .lede strong { color: var(--fg); font-weight: 600; }
+
+  .download { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 18px; }
+  .btn {
+    display: inline-flex; align-items: center; gap: 10px;
+    background: var(--accent); color: var(--accent-ink); text-decoration: none;
+    font: 600 17px/1 var(--body); padding: 16px 22px; border-radius: 999px;
+  }
+  .btn:hover { filter: brightness(1.06); }
+  .btn:focus-visible, a:focus-visible { outline: 3px solid var(--mac-blue); outline-offset: 3px; }
+  .req { font-size: 14px; color: var(--muted); }
+
+  h2 { font: 600 20px/1.2 var(--display); margin: 0 0 4px; }
+  section { display: grid; gap: 20px; }
+
+  ol.steps { list-style: none; margin: 0; padding: 0; display: grid; border-top: 1px solid var(--line); }
+  ol.steps > li { display: grid; grid-template-columns: 44px minmax(0, 1fr); gap: 16px; padding-block: 20px; border-bottom: 1px solid var(--line); }
+  .n { font: 800 15px/1 var(--display); color: var(--accent); padding-top: 5px; font-variant-numeric: tabular-nums; }
+  .steps h3 { font: 600 18px/1.35 var(--body); margin: 0 0 6px; }
+  .steps p { margin: 0 0 10px; }
+  .steps p:last-child { margin-bottom: 0; }
+  .once { display: inline-block; font: 600 12px/1 var(--body); letter-spacing: .06em; text-transform: uppercase; background: var(--accent-soft); color: var(--accent); padding: 5px 8px; border-radius: 6px; margin-left: 6px; vertical-align: 2px; }
+  .note { font-size: 15px; color: var(--muted); }
+  kbd, code { font: 500 14px/1 var(--mono); background: var(--accent-soft); color: var(--fg); padding: 3px 6px; border-radius: 5px; }
+  b { font-weight: 600; }
+
+  /* Sketches of what the Mac shows, so people recognise it */
+  .sketch {
+    background: var(--surface); border: 1px solid var(--line); border-radius: 12px;
+    padding: 16px; font: 400 14px/1.45 -apple-system, "Helvetica Neue", system-ui, sans-serif;
+    display: grid; gap: 12px; max-width: 420px;
+  }
+  .sketch .label { font: 600 11px/1 var(--body); letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+  .sketch .msg { font-weight: 600; }
+  .sketch .row { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+  .mac-btn { font: 500 13px/1 -apple-system, system-ui, sans-serif; border: 1px solid var(--line); border-radius: 6px; padding: 6px 12px; background: var(--bg); white-space: nowrap; }
+  .mac-btn.primary { background: var(--mac-blue); border-color: var(--mac-blue); color: #fff; }
+  .mac-btn.ring { box-shadow: 0 0 0 3px var(--accent); }
+
+  .use { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+  .use div { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 16px; display: grid; gap: 6px; align-content: start; }
+  .use .k { font: 800 13px/1 var(--display); color: var(--accent); }
+  .use p { margin: 0; }
+  @media (max-width: 560px) { .use { grid-template-columns: 1fr; } }
+
+  dl { margin: 0; display: grid; gap: 18px; }
+  dt { font-weight: 600; margin-bottom: 4px; }
+  dd { margin: 0; color: var(--muted); }
+</style>
+
+<div class="page">
+  <header>
+    <div class="app">
+      <div class="icon" aria-hidden="true">♪</div>
+      <div class="eyebrow">For Mac · free</div>
+    </div>
+    <h1>Get DJ on your Mac</h1>
+    <p class="lede">Paste a YouTube or SoundCloud link and DJ saves it as a <strong>top-quality MP3 with the cover art and artist name</strong> already filled in, ready for rekordbox, Serato, djay or Mixxx.</p>
+    <div class="download">
+      <a class="btn" id="download" href="https://github.com/george-593/dj-downloader/releases/latest/download/DJ.zip">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v12M6 11l6 6 6-6M5 20h14"/></svg>
+        Download DJ
+      </a>
+      <span class="req">macOS 13 or newer · any Mac · 1 MB</span>
+    </div>
+  </header>
+
+  <section aria-labelledby="install">
+    <h2 id="install">Install it</h2>
+    <ol class="steps">
+      <li>
+        <span class="n">01</span>
+        <div>
+          <h3>Unzip it and move it to Applications</h3>
+          <p>Open your <b>Downloads</b> folder and double-click <b>DJ.zip</b> (Safari often does this for you). Drag <b>DJ</b> into <b>Applications</b>.</p>
+        </div>
+      </li>
+      <li>
+        <span class="n">02</span>
+        <div>
+          <h3>Open DJ, then click Done <span class="once">first time only</span></h3>
+          <p>Your Mac will show a warning. That's normal for apps that don't come from the App Store. Click <b>Done</b>.</p>
+          <div class="sketch" aria-label="Example of the warning">
+            <span class="label">You'll see something like</span>
+            <span class="msg">Apple could not verify “DJ” is free of malware that may harm your Mac or compromise your privacy.</span>
+            <div class="row"><span></span><span style="display:flex;gap:8px"><span class="mac-btn">Move to Bin</span><span class="mac-btn primary ring">Done</span></span></div>
+          </div>
+        </div>
+      </li>
+      <li>
+        <span class="n">03</span>
+        <div>
+          <h3>Allow it in System Settings <span class="once">first time only</span></h3>
+          <p>Open <b>System Settings</b> (the grey gear app) and click <b>Privacy &amp; Security</b> in the sidebar. Scroll down to <b>Security</b> and click <b>Open Anyway</b> next to the DJ message.</p>
+          <div class="sketch" aria-label="Example of the Security section">
+            <span class="label">Privacy &amp; Security › Security</span>
+            <div class="row"><span>“DJ” was blocked to protect your Mac.</span><span class="mac-btn ring">Open Anyway</span></div>
+          </div>
+          <p class="note">Your Mac asks for your password or Touch ID, then shows one more box. Click <b>Open Anyway</b> there too.</p>
+        </div>
+      </li>
+      <li>
+        <span class="n">04</span>
+        <div>
+          <h3>Let it set itself up</h3>
+          <p>The first time, DJ spends about a minute downloading what it needs. You'll see a progress bar. After that it opens straight away.</p>
+        </div>
+      </li>
+    </ol>
+  </section>
+
+  <section aria-labelledby="use">
+    <h2 id="use">Downloading a song</h2>
+    <div class="use">
+      <div><span class="k">Copy</span><p>Copy a link from YouTube or SoundCloud.</p></div>
+      <div><span class="k">Open DJ</span><p>The link is already filled in. Click <b>Download</b>.</p></div>
+      <div><span class="k">Done</span><p>Click <b>Show in Finder</b>. Songs live in <b>Music › DJ</b>.</p></div>
+    </div>
+    <p class="note">Playlist links download the whole playlist. In your DJ software, add the <b>Music › DJ</b> folder once and new songs show up there.</p>
+  </section>
+
+  <section aria-labelledby="help">
+    <h2 id="help">If something goes wrong</h2>
+    <dl>
+      <div>
+        <dt>It says “Download failed”</dt>
+        <dd>Check the link opens in your browser, then quit DJ and open it again. DJ updates itself once a week, and YouTube changes often, so a fresh start usually fixes it. If not, message whoever sent you this page.</dd>
+      </div>
+      <div>
+        <dt>I can't find “Open Anyway”</dt>
+        <dd>Open DJ once first (step 02). The button only appears in Privacy &amp; Security for about an hour after your Mac blocks it.</dd>
+      </div>
+      <div>
+        <dt>Removing DJ</dt>
+        <dd>Drag DJ from Applications to the Bin. To remove its tools too, in Finder press <kbd>⇧⌘G</kbd>, type <code>~/.dj</code> and delete that folder. Your songs stay where they are.</dd>
+      </div>
+    </dl>
+  </section>
+
+</div>
