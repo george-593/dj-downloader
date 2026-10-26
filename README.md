@@ -5,6 +5,8 @@ artist/title tags in **Music › DJ**, ready to drop into rekordbox, Serato, dja
 
 ## Install
 
+Friendly step-by-step guide: **https://dj.georges.codes**
+
 1. **[Download DJ.zip](https://github.com/george-593/dj-downloader/releases/latest/download/DJ.zip)**
 2. Open your **Downloads** folder and double-click **DJ.zip** (Safari may already have done this).
    Drag **DJ** into **Applications**.
@@ -40,3 +42,4 @@ Playlist links download the whole playlist. You can also paste several links at 
 - `./build.sh` builds a universal `build/DJ.app` and `build/DJ.zip` (needs Xcode Command Line Tools).
   Bump `INSTALL_VERSION` in both `install-dj.command` and `DJ.swift` when the installer changes,
   so existing users get re-set-up.
+- `docs/` is the install guide at dj.georges.codes (GitHub Pages, deploys on push to main).
